@@ -74,11 +74,10 @@ for event in events:
     
     event_list.append(event_info)
     
- df = pd.DataFrame(event_list)
+df = pd.DataFrame(event_list)
  
- # Upload to PostgreSQL database
- df.to_sql('events_geislingen', engine, if_exists='replace', index=False)
- 
- 
- # Execute Merge Procedure
- engine.execute('CALL merge_events_geislingen(); COMMIT;')
+# Upload to PostgreSQL database
+df.to_sql('events_geislingen', engine, if_exists='replace', index=False)
+
+# Execute Merge Procedure
+engine.execute('CALL merge_events_geislingen(); COMMIT;')
