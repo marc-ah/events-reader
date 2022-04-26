@@ -1,6 +1,7 @@
 #!python3
 # coding: utf-8
 
+from dotenv import load_dotenv
 import os
 import sys
 from datetime import date as dt
@@ -14,8 +15,19 @@ import ast
 sys.path.append('./lib')
 import scrape  
 
+load_dotenv()
+
+host = str(os.getenv("POSTGRES_HOST"))
+port = str(os.getenv("POSTGRES_PORT"))
+user = str(os.getenv("POSTGRES_USER"))
+password = str(os.getenv("POSTGRES_PASS"))
+db = str(os.getenv("POSTGRES_DB"))
+
+postgres_connection_string = "postgresql://" + db + ":" + password + "@" + host + ":" + port "/" + db
+
 # PostgreSQL connection
-engine = create_engine('postgresql://cdn_events:###@cdn.bplaced.net:5432/cdn_events', connect_args={'options': '-csearch_path={}'.format('stage')})
+engine = create_engine(postgres_connection_string, connect_args={'options': '-csearch_path={}'.format('stage')})
+
 
 # Current date for deltaload
 startMonth = datetime.now().strftime('%Y%m%d')
