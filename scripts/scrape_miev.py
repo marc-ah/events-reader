@@ -23,7 +23,7 @@ user = str(os.getenv("POSTGRES_USER"))
 password = str(os.getenv("POSTGRES_PASS"))
 db = str(os.getenv("POSTGRES_DB"))
 
-postgres_connection_string = "postgresql://" + db + ":" + password + "@" + host + ":" + port "/" + db
+postgres_connection_string = "postgresql://" + db + ":" + password + "@" + host + ":" + port + "/" + db
 
 # PostgreSQL connection
 engine = create_engine(postgres_connection_string, connect_args={'options': '-csearch_path={}'.format('stage')})
