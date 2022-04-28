@@ -1,6 +1,6 @@
 datetime
 requests
-re
+regex
 html2text
 dotenv
 pandas
