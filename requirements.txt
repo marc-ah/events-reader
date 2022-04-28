@@ -1,6 +1,5 @@
 datetime
 requests
-sys
 re
 html2text
 dotenv
