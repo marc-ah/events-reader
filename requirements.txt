@@ -7,7 +7,7 @@ re
 html2text
 dotenv
 pandas
-json#
+json
 ast
 sqlalchemy
 
