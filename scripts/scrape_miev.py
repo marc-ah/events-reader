@@ -11,6 +11,7 @@ import requests
 import json
 import re
 import ast
+from sqlalchemy import create_engine
 
 sys.path.append('./lib')
 import scrape  
@@ -28,38 +29,27 @@ postgres_connection_string = "postgresql://" + db + ":" + password + "@" + host 
 # PostgreSQL connection
 engine = create_engine(postgres_connection_string, connect_args={'options': '-csearch_path={}'.format('stage')})
 
-# Current date for deltaload
-startMonth = datetime.now().strftime('%Y%m%d')
+raw_data = scrape.scrape_url("https://www.miev.info/index.php/wp-json/tribe/events/v1/events")
 
-# API-URL
-raw_data = scrape.scrape_url("https://exchange.cmcitymedia.de/geislingenNeu/veranstaltungenData.php?mapHomepageId=4500&action=getAllData&startMonth=" + startMonth)
-
-# Read JSONP and convert
-raw_data = raw_data.decode('utf-8')
-raw_data = re.match(".*?({.*}).*",raw_data,re.S).group(1)
-raw_data = raw_data.replace('{sites:','{"sites":')
-
-# Convert to Dictionary
-dict_data = ast.literal_eval(raw_data)
-
-events = dict_data["sites"]
+#Load JSON and convert
+json_data = json.loads(raw_data)
 
 
-picture_url_prefix = "https://publish.cmcitymedia.de/calendar/getPicture.php?id="
+events = json_data["events"]
+
 
 event_info = []
 event_list = []
 
-# Write to dataframe
+# Write to dataframefor event in events:
 for event in events:
-    event_id = event["cal_id"]
+    event_id = event["id"]
     title = event["title"]
-    category = event["category"]
-    organizer = event["organizer"]
+    category = "Feiern & Geselligkeit"
     description = scrape.clean_html_description(event["description"])
-    event_date = event["dateFrom"]
-    img_url = picture_url_prefix + event["picture"]
-    event_url = "https://www.geislingen.de/index.php?id=93"
+    event_date = event["start_date"][0:10]
+    img_url = event['image']['url']
+    event_url = event["url"]
     
     event_info = dict(
         event_id=event_id,
@@ -67,7 +57,7 @@ for event in events:
         description=description,
         event_date=event_date,
         category=category,
-        organizer=organizer,
+        organizer='Muskerinitiative e.V.',
         img_url=img_url,
         event_url=event_url,
     )
@@ -77,7 +67,7 @@ for event in events:
 df = pd.DataFrame(event_list)
  
 # Upload to PostgreSQL database
-df.to_sql('events_geislingen', engine, if_exists='replace', index=False)
+df.to_sql('events_miev', engine, if_exists='replace', index=False)
 
 # Execute Merge Procedure
-engine.execute('CALL merge_events_geislingen(); COMMIT;')
+engine.execute('CALL merge_events_miev(); COMMIT;')

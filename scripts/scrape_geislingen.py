@@ -11,6 +11,7 @@ import requests
 import json
 import re
 import ast
+from sqlalchemy import create_engine
 
 sys.path.append('./lib')
 import scrape  
