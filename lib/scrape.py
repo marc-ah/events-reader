@@ -32,12 +32,13 @@ def scrape_url(url):
             logging.warning(f" Request to {url} FAILED. Status: {status}")
         else:
             logging.info(f" Request to {url} successful. Status: {status}")
+            
+        return response.content
           
     except:
         logging.error(f" An Error occured while requesting {url}")
         logging.error(f" Unexpected error:", sys.exc_info()[0])
         
-    return response.content
 
 
 def clean_html_description(d):
