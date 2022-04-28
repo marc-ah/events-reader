@@ -1,6 +1,5 @@
 datetime
 requests
-logging
 sys
 re
 html2text
