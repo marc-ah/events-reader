@@ -14,12 +14,12 @@ h2t.RE_MD_CHARS_MATCHER = True
 def scrape_url(url):
 
     #Loggin
-    logfile = "scrape.log"
-    handler = logging.FileHandler(logfile, 'w', 'utf-8') 
-    handler.setFormatter(logging.Formatter("%(asctime)s;%(levelname)s;%(message)s","%Y-%m-%d %H:%M:%S"))       
-    root_logger= logging.getLogger()
-    root_logger.setLevel(logging.DEBUG)
-    root_logger.addHandler(handler)
+   
+    logging.basicConfig(filename='scrape.log',
+                    filemode='a',
+                    format='%(asctime)s;%(levelname)s;%(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    level=logging.DEBUG)
 
     #request website
     try:
