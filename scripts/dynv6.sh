@@ -36,7 +36,7 @@ fi
 current=$address/$netmask
 
 if [ "$old" = "$current" ]; then
-  echo "IPv6 address unchanged"
+  #echo "IPv6 address unchanged"
   exit
 fi
 
